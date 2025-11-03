@@ -1,0 +1,127 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Garden Theme - Polaroid & Scrapbook Aesthetic */
+    --cream: 32 42% 96%;
+    --muted-blue: 221 57% 70%;
+    --pastel-olive: 47 54% 36%;
+    --terra: 10 52% 60%;
+    --dust-rose: 14 50% 79%;
+    --leaf: 129 35% 62%;
+    --soft-brown: 27 29% 32%;
+    --ink: 30 14% 16%;
+    --muted-gray: 40 14% 91%;
+    
+    --background: var(--cream);
+    --foreground: var(--ink);
+
+    --card: var(--muted-gray);
+    --card-foreground: var(--ink);
+
+    --popover: var(--cream);
+    --popover-foreground: var(--ink);
+
+    --primary: var(--muted-blue);
+    --primary-foreground: var(--cream);
+
+    --secondary: var(--dust-rose);
+    --secondary-foreground: var(--soft-brown);
+
+    --muted: var(--muted-gray);
+    --muted-foreground: var(--soft-brown);
+
+    --accent: var(--pastel-olive);
+    --accent-foreground: var(--cream);
+
+    --destructive: 0 65% 58%;
+    --destructive-foreground: var(--cream);
+
+    --border: 27 29% 32% / 0.08;
+    --input: var(--muted-gray);
+    --ring: var(--muted-blue);
+
+    --radius: 1.25rem;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    /* Keep same garden theme for dark mode with adjusted brightness */
+    --background: 27 15% 12%;
+    --foreground: var(--cream);
+    --card: 27 15% 18%;
+    --muted: 27 15% 20%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+  }
+}
+
+@layer utilities {
+  .text-hand {
+    font-family: 'Patrick Hand', cursive;
+  }
+  
+  .shadow-soft {
+    box-shadow: 0 6px 18px rgba(43, 37, 33, 0.06);
+  }
+  
+  .shadow-stamp {
+    box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.04);
+  }
+  
+  .hover-lift {
+    @apply transition-all duration-200 hover:scale-[1.02] hover:-translate-y-0.5;
+  }
+  
+  .scrapbook-card {
+    @apply bg-card border rounded-xl p-6 shadow-soft;
+    border-color: hsl(27 29% 32% / 0.08);
+  }
+  
+  .tape-accent {
+    @apply absolute -top-2 -right-2 px-3 py-1 bg-dust-rose text-soft-brown text-xs text-hand rotate-3 rounded-full shadow-sm;
+  }
+  
+  .stripe-bg {
+    background: repeating-linear-gradient(
+      45deg,
+      hsl(var(--cream)),
+      hsl(var(--cream)) 10px,
+      hsl(var(--muted-blue) / 0.1) 10px,
+      hsl(var(--muted-blue) / 0.1) 20px
+    );
+  }
+}

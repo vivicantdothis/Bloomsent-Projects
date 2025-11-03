@@ -1,0 +1,18 @@
+{
+  "plants": [
+    {
+      "id": "1762191807881",
+      "personalityType": "Protea",
+      "personalityVector": [
+        0.4,
+        0.2,
+        0.4
+      ],
+      "songUrl": "https://open.spotify.com/track/3QFxra2jEhDKKUMDmbDXbk?si=290446201f1246d4",
+      "messageTo": "The Declaration of Independence",
+      "messageFrom": "Riley Poole",
+      "message": "in another world, i'd find you in a heartbeat",
+      "createdAt": "2025-11-03T17:43:27.881Z"
+    }
+  ]
+}
