@@ -1,6 +1,6 @@
 import { Plant } from "./types";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
+const API_URL = import.meta.env.VITE_API_URL || "https://bloom-z216.onrender.com/api";
 
 export async function getAllPlants(): Promise<Plant[]> {
   const response = await fetch(`${API_URL}/plants`);
