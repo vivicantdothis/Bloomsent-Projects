@@ -5,6 +5,8 @@ import mongoose from "mongoose";
 import Plant from "./models/Plant.js"; // <-- our mongoose model
 import { extractSpotifyTrackId, fetchAudioFeatures } from "./services/spotify.js";
 import { combinedSimilarity } from "./utils/similarity.js";
+import spotifyApi from "./api/spotify";
+
 dotenv.config();
 
 const app = express();
@@ -12,6 +14,7 @@ const PORT = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(express.json());
+app.use("/api/spotify", spotifyApi);
 
 async function connectDB() {
   try {

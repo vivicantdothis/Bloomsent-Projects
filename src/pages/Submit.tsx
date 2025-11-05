@@ -12,7 +12,6 @@ import { calculatePersonality } from "@/lib/quizData";
 import { submitPlant } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
-import { extractSpotifyTrackId, fetchAudioFeatures } from "@/models/spotify";
 
 const Submit = () => {
   const navigate = useNavigate();
@@ -34,18 +33,26 @@ const Submit = () => {
     setStep("details");
   };
 
+  const extractSpotifyTrackId = (url: string) => {
+    const match = url.match(/track\/([a-zA-Z0-9]+)/);
+    return match ? match[1] : null;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
 
     try {
-      // Fetch Spotify features if song URL is provided
       let songFeatures: number[] = [];
       if (songUrl) {
         const trackId = extractSpotifyTrackId(songUrl);
         if (trackId) {
-          const vec = await fetchAudioFeatures(trackId);
-          if (vec) songFeatures = vec;
+          const response = await fetch(`/api/spotify/features?trackId=${trackId}`);
+          if (response.ok) {
+            songFeatures = await response.json();
+          } else {
+            console.error("Failed to fetch Spotify features");
+          }
         }
       }
 
@@ -65,7 +72,7 @@ const Submit = () => {
         description: "Your plant has been added to the garden",
       });
 
-      // Navigate to garden and pass new plant ID for bloom animation
+      // Navigate to garden
       navigate(`/garden?newPlantId=${newPlant._id}`);
     } catch (error) {
       toast({
