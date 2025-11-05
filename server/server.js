@@ -3,23 +3,22 @@ import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import Plant from "./models/Plant.js"; // <-- our mongoose model
-
+import { extractSpotifyTrackId, fetchAudioFeatures } from "./services/spotify.js";
+import { combinedSimilarity } from "./utils/similarity.js";
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// --- MongoDB Connection ---
 async function connectDB() {
   try {
     await mongoose.connect(process.env.MONGODB_URI, {
       dbName: "living_garden",
     });
-    console.log("✅ Connected to MongoDB Atlas");
+    console.log("Connected to MongoDB Atlas");
   } catch (err) {
     console.error("❌ MongoDB connection failed:", err);
     process.exit(1);
@@ -28,13 +27,26 @@ async function connectDB() {
 connectDB();
 
 // --- Routes ---
-// Get all plants
-app.get("/api/plants", async (req, res) => {
+app.get("/api/plants/:id/similar", async (req, res) => {
   try {
-    const plants = await Plant.find().sort({ createdAt: -1 });
-    res.json(plants);
+    const targetPlant = await Plant.findById(req.params.id);
+    if (!targetPlant) {
+      return res.status(404).json({ error: "Plant not found" });
+    }
+
+    const allPlants = await Plant.find({ _id: { $ne: targetPlant._id } });
+
+    const scored = allPlants.map((p) => ({
+      plant: p,
+      score: combinedSimilarity(targetPlant, p),
+    }));
+
+    scored.sort((a, b) => b.score - a.score);
+
+    res.json(scored.slice(0, 10)); // top 10 similar
   } catch (err) {
-    res.status(500).json({ error: "Failed to fetch plants" });
+    console.error(err);
+    res.status(500).json({ error: "Failed to compute similarity" });
   }
 });
 
@@ -47,10 +59,21 @@ app.post("/api/plants", async (req, res) => {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
+    // NEW: compute songVector if songUrl exists
+    let songFeatures = [];
+    if (songUrl) {
+      const trackId = extractSpotifyTrackId(songUrl);
+      if (trackId) {
+        const vec = await fetchAudioFeatures(trackId);
+        if (vec) songFeatures = vec;
+      }
+    }
+
     const newPlant = await Plant.create({
       personalityType,
       personalityVector,
       songUrl: songUrl || "",
+      songFeatures, // <-- NEW stored field
       messageTo: messageTo || "",
       messageFrom: messageFrom || "",
       message: message || "",

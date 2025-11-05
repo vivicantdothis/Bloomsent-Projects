@@ -3,47 +3,47 @@ import { QuizQuestion } from "./types";
 export const quizQuestions: QuizQuestion[] = [
   {
     id: 1,
-    question: "Where would you rather spend a morning?",
+    question: "YOUR PLANT HAS GROWN LEGS. WHERE IS IT GOING?",
     choices: [
-      { label: "At a sunny farmer's market", emoji: "🌻", vector: [1, 0, 0] },
-      { label: "Reading by the window with tea", emoji: "☕", vector: [0, 1, 0] },
-      { label: "Tinkering in a workshop", emoji: "🔧", vector: [0, 0, 1] },
+      { label: "A CONCERT, OBVIOUSLY", emoji: "", vector: [1, 0, 0] },
+      { label: "TO YOUR FAVOURITE NOOK IN THE LOCAL BOOKSTORE", emoji: "", vector: [0, 1, 0] },
+      { label: "TO THE MOUNTAINS OR THE BEACH, FOR THE ADVENTURE", emoji: "", vector: [0, 0, 1] },
     ],
   },
   {
     id: 2,
-    question: "Your ideal weekend is…",
+    question: "PICK A CHAOS PET.",
     choices: [
-      { label: "Dancing with friends at a small show", emoji: "💃", vector: [1, 0, 0] },
-      { label: "Long walk in a quiet garden", emoji: "🌿", vector: [0, 1, 0] },
-      { label: "Starting a new DIY project", emoji: "🛠️", vector: [0, 0, 1] },
+      { label: "A CHEEKY PIGEON THAT GOSSIPS", emoji: "", vector: [1, 0, 0] },
+      { label: "A COY CAT THAT JUDGES EVERYONE SLIGHTLY", emoji: "", vector: [0, 1, 0] },
+      { label: "A SNEAKY FOX THAT STEALS SHINY THINGS", emoji: "", vector: [0, 0, 1] },
     ],
   },
   {
     id: 3,
-    question: "Pick a comfort food",
+    question: "YOU WAKE UP IN A VIDEO-GAME WORLD. WHAT'S YOUR FIRST MOVE?",
     choices: [
-      { label: "Fresh-baked honey pastry", emoji: "🥐", vector: [1, 0, 0] },
-      { label: "Chamomile tea & toast", emoji: "🍵", vector: [0, 1, 0] },
-      { label: "Spicy stir-fry", emoji: "🌶️", vector: [0, 0, 1] },
+      { label: "FIND OTHER PLAYERS TO TEAM UP", emoji: "", vector: [1, 0, 0] },
+      { label: "EXPLORE THE MAP ALONE, THERE'S NO RUSH", emoji: "", vector: [0, 1, 0] },
+      { label: "SPEED-RUN ALL THE QUESTS AND BREAK THE GAME", emoji: "", vector: [0, 0, 1] },
     ],
   },
   {
     id: 4,
-    question: "Your emoji of choice",
+    question: "PICK A RANDOM SIDE QUEST.",
     choices: [
-      { label: "Sunshine", emoji: "🌞", vector: [1, 0, 0] },
-      { label: "Sprout", emoji: "🌱", vector: [0, 1, 0] },
-      { label: "Cactus", emoji: "🌵", vector: [0, 0, 1] },
+      { label: "HOST A PICNIC FOR STRANGERS", emoji: "", vector: [1, 0, 0] },
+      { label: "ADOPT A ROCK AND NAME IT", emoji: "", vector: [0, 1, 0] },
+      { label: "BUILD SOMETHING NEW AT 2AM", emoji: "", vector: [0, 0, 1] },
     ],
   },
   {
     id: 5,
-    question: "Soundtrack for your day",
+    question: "WHAT DOES THE SOUNDTRACK OF YOUR INDIE FILM SOUND LIKE?",
     choices: [
-      { label: "Folky acoustic jam", emoji: "🎸", vector: [1, 0, 0] },
-      { label: "Ambient piano", emoji: "🎹", vector: [0, 1, 0] },
-      { label: "Upbeat indie rock", emoji: "🎵", vector: [0, 0, 1] },
+      { label: "CHILL R&B AND POST-PUNK", emoji: "", vector: [1, 0, 0] },
+      { label: "AMBIENT PIANO MUSIC", emoji: "", vector: [0, 1, 0] },
+      { label: "UPBEAT INDIE POP AND GARAGE ROCK", emoji: "", vector: [0, 0, 1] },
     ],
   },
 ];
@@ -67,14 +67,14 @@ export function calculatePersonality(answers: [number, number, number][]): {
   const max = Math.max(warmth, calm, bold);
 
   let type = "";
-  if (warmth === max) type = "Sunflower";
-  else if (calm === max) type = "Willow";
-  else type = "Cactus";
+  if (warmth === max) type = "SUNFLOWER";
+  else if (calm === max) type = "WILLOW";
+  else type = "CACTUS";
 
   // Handle ties
-  if (warmth === calm && warmth > bold) type = "Marigold";
-  else if (calm === bold && calm > warmth) type = "Lavender";
-  else if (warmth === bold && warmth > calm) type = "Protea";
+  if (warmth === calm && warmth > bold) type = "MARIGOLD";
+  else if (calm === bold && calm > warmth) type = "LAVENDER";
+  else if (warmth === bold && warmth > calm) type = "PROTEA";
 
   return { type, vector: normalized };
 }

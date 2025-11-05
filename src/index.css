@@ -2,13 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
 
 @layer base {
   :root {
-    /* Garden Theme - Polaroid & Scrapbook Aesthetic */
     --cream: 32 42% 96%;
     --muted-blue: 221 57% 70%;
     --pastel-olive: 47 54% 36%;
@@ -67,7 +63,6 @@ All colors MUST be HSL.
   }
 
   .dark {
-    /* Keep same garden theme for dark mode with adjusted brightness */
     --background: 27 15% 12%;
     --foreground: var(--cream);
     --card: 27 15% 18%;

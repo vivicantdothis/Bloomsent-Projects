@@ -12,12 +12,14 @@ import { calculatePersonality } from "@/lib/quizData";
 import { submitPlant } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
+import { extractSpotifyTrackId, fetchAudioFeatures } from "@/services/spotify";
 
 const Submit = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+
   const [step, setStep] = useState<"quiz" | "details">("quiz");
-  const [personalityVector, setPersonalityVector] = useState<[number, number, number]>([0, 0, 0]);
+  const [personalityVector, setPersonalityVector] = useState<number[]>([]);
   const [personalityType, setPersonalityType] = useState("");
   const [songUrl, setSongUrl] = useState("");
   const [messageTo, setMessageTo] = useState("");
@@ -25,9 +27,9 @@ const Submit = () => {
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  const handleQuizComplete = (answers: [number, number, number][]) => {
+  const handleQuizComplete = (answers: [number, number, number][], vector: number[]) => {
+    setPersonalityVector(vector);
     const result = calculatePersonality(answers);
-    setPersonalityVector(result.vector);
     setPersonalityType(result.type);
     setStep("details");
   };
@@ -37,10 +39,22 @@ const Submit = () => {
     setSubmitting(true);
 
     try {
-      await submitPlant({
+      // Fetch Spotify features if song URL is provided
+      let songFeatures: number[] = [];
+      if (songUrl) {
+        const trackId = extractSpotifyTrackId(songUrl);
+        if (trackId) {
+          const vec = await fetchAudioFeatures(trackId);
+          if (vec) songFeatures = vec;
+        }
+      }
+
+      // Submit plant to backend
+      const newPlant = await submitPlant({
         personalityType,
         personalityVector,
         songUrl,
+        songFeatures,
         messageTo: messageTo || undefined,
         messageFrom: messageFrom || undefined,
         message: message || undefined,
@@ -51,7 +65,8 @@ const Submit = () => {
         description: "Your plant has been added to the garden",
       });
 
-      navigate("/garden");
+      // Navigate to garden and pass new plant ID for bloom animation
+      navigate(`/garden?newPlantId=${newPlant._id}`);
     } catch (error) {
       toast({
         title: "Error planting",
@@ -66,7 +81,7 @@ const Submit = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      
+
       <main className="flex-1 py-12 px-4">
         <div className="container mx-auto max-w-3xl">
           <div className="text-center mb-8">
@@ -74,7 +89,7 @@ const Submit = () => {
               Plant Something Beautiful
             </h1>
             <p className="text-lg text-muted-foreground">
-              {step === "quiz" 
+              {step === "quiz"
                 ? "Answer a few questions to discover your plant type"
                 : `You're a ${personalityType}! Add your song and message`}
             </p>

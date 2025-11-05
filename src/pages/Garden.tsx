@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { GardenGrid } from "@/components/garden/GardenGrid";
@@ -14,6 +14,7 @@ const Garden = () => {
   const [selectedPlant, setSelectedPlant] = useState<Plant | null>(null);
   const [similarPlants, setSimilarPlants] = useState<Plant[]>([]);
   const [loading, setLoading] = useState(true);
+  const gardenRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -41,10 +42,27 @@ const Garden = () => {
     setSimilarPlants(similar);
   };
 
+  // Zoom handling on the container
+  useEffect(() => {
+    const el = gardenRef.current;
+    if (!el) return;
+
+    let scale = 1;
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      scale += e.deltaY * -0.001;
+      scale = Math.min(Math.max(0.5, scale), 2); // clamp zoom between 0.5x and 2x
+      el.style.transform = `scale(${scale})`;
+    };
+
+    el.addEventListener("wheel", handleWheel, { passive: false });
+    return () => el.removeEventListener("wheel", handleWheel);
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      
+
       <main className="flex-1 py-12 px-4">
         <div className="container mx-auto max-w-7xl">
           <div className="text-center mb-12">
@@ -52,13 +70,8 @@ const Garden = () => {
               The Living Garden
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Click on any plant to discover its personality, music, and message
+              Click on any plant to view its details and connected similar plants
             </p>
-            <div className="mt-4 inline-block px-4 py-2 bg-leaf/20 rounded-full">
-              <span className="text-hand text-leaf font-medium">
-                {plants.length} plants growing 🌱
-              </span>
-            </div>
           </div>
 
           {loading ? (
@@ -66,7 +79,14 @@ const Garden = () => {
               <Loader2 className="w-8 h-8 animate-spin text-leaf" />
             </div>
           ) : (
-            <GardenGrid plants={plants} onPlantClick={handlePlantClick} />
+            <div ref={gardenRef} className="origin-top-left relative">
+              <GardenGrid
+                plants={plants}
+                onPlantClick={handlePlantClick}
+                selectedPlant={selectedPlant}
+                similarPlants={similarPlants}
+              />
+            </div>
           )}
         </div>
       </main>

@@ -39,14 +39,20 @@ export function clusterPlants(plants: Plant[]): Plant[][] {
   return clusters;
 }
 
-export function getSimilarPlants(plant: Plant, allPlants: Plant[], limit = 3): Plant[] {
+// Updated: returns plants with compatibilityScore
+export function getSimilarPlants(
+  plant: Plant,
+  allPlants: Plant[],
+  limit = 3
+): (Plant & { compatibilityScore: number })[] {
   return allPlants
     .filter((p) => p.id !== plant.id)
     .map((p) => ({
-      plant: p,
-      similarity: cosineSimilarity(plant.personalityVector, p.personalityVector),
+      ...p,
+      compatibilityScore: Math.round(
+        cosineSimilarity(plant.personalityVector, p.personalityVector) * 100
+      ),
     }))
-    .sort((a, b) => b.similarity - a.similarity)
-    .slice(0, limit)
-    .map((item) => item.plant);
+    .sort((a, b) => b.compatibilityScore - a.compatibilityScore)
+    .slice(0, limit);
 }

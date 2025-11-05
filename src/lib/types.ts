@@ -7,6 +7,7 @@ export interface Plant {
   messageFrom?: string;
   message?: string;
   createdAt: string;
+  compatibilityScore?: number;
 }
 
 export interface QuizAnswer {
