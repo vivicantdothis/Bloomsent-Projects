@@ -12,7 +12,7 @@ import { calculatePersonality } from "@/lib/quizData";
 import { submitPlant } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
-import { extractSpotifyTrackId, fetchAudioFeatures } from "@/services/spotify";
+import { extractSpotifyTrackId, fetchAudioFeatures } from "@/models/spotify";
 
 const Submit = () => {
   const navigate = useNavigate();
