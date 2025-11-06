@@ -47,7 +47,8 @@ const Submit = () => {
       if (songUrl) {
         const trackId = extractSpotifyTrackId(songUrl);
         if (trackId) {
-          const response = await fetch(`/api/spotify/features?trackId=${trackId}`);
+          const BACKEND_URL = import.meta.env.VITE_API_URL || "";
+          const response = await fetch(`${BACKEND_URL}/spotify/features?trackId=${trackId}`);
           if (response.ok) {
             songFeatures = await response.json();
           } else {
@@ -56,7 +57,6 @@ const Submit = () => {
         }
       }
 
-      // Submit plant to backend
       const newPlant = await submitPlant({
         personalityType,
         personalityVector,
@@ -72,7 +72,6 @@ const Submit = () => {
         description: "Your plant has been added to the garden",
       });
 
-      // Navigate to garden
       navigate(`/garden?newPlantId=${newPlant._id}`);
     } catch (error) {
       toast({
