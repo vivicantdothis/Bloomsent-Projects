@@ -1,10 +1,14 @@
+/* Root container */
 #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  background-color: #fefcf5; /* soft background for garden */
 }
 
+/* Logo animations */
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -19,12 +23,8 @@
 }
 
 @keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -33,18 +33,187 @@
   }
 }
 
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
+/* Bloom animation */
 @keyframes bloom {
   0% { transform: scale(0.5); opacity: 0; }
   100% { transform: scale(1); opacity: 1; }
 }
-
 .animate-bloom {
   animation: bloom 0.6s ease-out;
+}
+
+/* Polaroid-style Plant Cards */
+.scrapbook-card {
+  background: #fffbe6; /* soft cream background */
+  border: 2px solid #d6c7a1; /* soft brown border */
+  border-radius: 12px;
+  box-shadow: 0 6px 10px rgba(0,0,0,0.15);
+  transition: transform 0.2s, box-shadow 0.2s;
+  padding: 1rem;
+  text-align: center;
+  cursor: pointer;
+}
+.scrapbook-card:hover {
+  transform: translateY(-4px) rotate(-1deg);
+  box-shadow: 0 12px 20px rgba(0,0,0,0.2);
+}
+
+/* Plant Emoji */
+.plant-emoji {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+  transition: transform 0.2s;
+}
+.scrapbook-card:hover .plant-emoji {
+  transform: scale(1.2);
+}
+
+/* Plant Type */
+.plant-type {
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+  color: #8b5e3c; /* soft brown */
+  margin-bottom: 0.25rem;
+}
+
+/* Plant Song Indicator */
+.song-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  color: #556b2f; /* dark green */
+}
+
+/* Plant Side Panel */
+.plant-side-panel {
+  position: fixed;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 24rem;
+  background-color: #fffbe6;
+  box-shadow: -4px 0 12px rgba(0,0,0,0.2);
+  z-index: 50;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  border-left: 2px solid #d6c7a1;
+}
+
+/* Side panel header */
+.side-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #d6c7a1;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+.side-panel-header h2 {
+  font-size: 1.5rem;
+  color: #8b5e3c;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Close button */
+.close-btn {
+  width: 2rem;
+  height: 2rem;
+  background-color: #f4cccc;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+.close-btn:hover {
+  transform: scale(1.1);
+}
+
+/* Side panel content */
+.side-panel-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Plant messages */
+.plant-message {
+  background-color: #fff8dc;
+  border: 1px solid #d6c7a1;
+  border-radius: 8px;
+  padding: 0.75rem;
+  font-size: 0.85rem;
+  font-style: italic;
+  color: #8b5e3c;
+}
+.plant-message-footer {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: #556b2f;
+}
+
+/* Spotify Embed / Button */
+.spotify-embed {
+  border-radius: 8px;
+  width: 100%;
+}
+.spotify-button {
+  border: 2px solid #d6c7a1;
+  background-color: #fffbe6;
+  color: #8b5e3c;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  transition: transform 0.2s, background-color 0.2s;
+  text-align: center;
+}
+.spotify-button:hover {
+  background-color: #f9f2d9;
+  transform: scale(1.05);
+}
+
+/* Similar plants */
+.similar-plants-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.similar-plant-card {
+  background-color: #fffbe6;
+  border: 1px solid #d6c7a1;
+  border-radius: 8px;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+.similar-plant-emoji {
+  font-size: 1.5rem;
+}
+.similar-plant-score {
+  font-size: 0.75rem;
+  font-weight: bold;
+  color: #228b22; /* leaf green */
+}
+
+/* Loader */
+.loader {
+  color: #556b2f;
+  font-size: 2rem;
+}
+
+/* Canvas / lines */
+canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 0;
 }
