@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { GardenGrid } from "@/components/garden/GardenGrid";
-import { PlantModal } from "@/components/garden/PlantModal";
 import { getAllPlants } from "@/lib/api";
 import { getSimilarPlants } from "@/lib/clustering";
 import { Plant } from "@/lib/types";
@@ -36,28 +35,15 @@ const Garden = () => {
     }
   };
 
-  const handlePlantClick = (plant: Plant) => {
+  const handlePlantClick = (plant: Plant | null) => {
     setSelectedPlant(plant);
-    const sims = getSimilarPlants(plant, plants);
-    setSimilarPlants(sims);
+    if (plant) {
+      const sims = getSimilarPlants(plant, plants);
+      setSimilarPlants(sims);
+    } else {
+      setSimilarPlants([]);
+    }
   };
-
-  // Zoom handling
-  useEffect(() => {
-    const el = gardenRef.current;
-    if (!el) return;
-
-    let scale = 1;
-    const handleWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      scale += e.deltaY * -0.001;
-      scale = Math.min(Math.max(0.5, scale), 2);
-      el.style.transform = `scale(${scale})`;
-    };
-
-    el.addEventListener("wheel", handleWheel, { passive: false });
-    return () => el.removeEventListener("wheel", handleWheel);
-  }, []);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -90,14 +76,6 @@ const Garden = () => {
           )}
         </div>
       </main>
-
-      {selectedPlant && (
-        <PlantSidePanel
-          plant={selectedPlant}
-          onClose={() => setSelectedPlant(null)}
-          similarPlants={similarPlants}
-        />
-      )}
 
       <Footer />
     </div>

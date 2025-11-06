@@ -3,7 +3,7 @@ import { PlantCard } from "./PlantCard";
 import { PlantModal } from "./PlantModal";
 import { useEffect, useRef, useState } from "react";
 
-// Define emojis for each plant type
+// Emojis for plant types
 const plantEmojis: Record<string, string> = {
   Sunflower: "🌻",
   Willow: "🌿",
@@ -112,7 +112,6 @@ export function GardenGrid({
         </div>
       </div>
 
-      {/* PlantModal rendered outside scaled container */}
       {selectedPlant && (
         <PlantModal
           plant={selectedPlant}
