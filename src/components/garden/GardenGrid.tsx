@@ -1,123 +1,103 @@
-import { useState, useEffect, useRef } from "react";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
-import { GardenGrid } from "@/components/garden/GardenGrid";
-import { PlantModal } from "@/components/garden/PlantModal";
-import { getAllPlants } from "@/lib/api";
-import { calculateSimilarity, getSimilarPlants } from "@/lib/clustering";
+// src/components/garden/GardenGrid.tsx
 import { Plant } from "@/lib/types";
-import { useToast } from "@/hooks/use-toast";
-import { Loader2 } from "lucide-react";
+import { PlantCard } from "./PlantCard";
+import { useEffect, useRef, useState } from "react";
 
-const Garden = () => {
-  const [plants, setPlants] = useState<Plant[]>([]);
-  const [selectedPlant, setSelectedPlant] = useState<Plant | null>(null);
-  const [similarPlants, setSimilarPlants] = useState<(Plant & { compatibilityScore: number })[]>([]);
-  const [loading, setLoading] = useState(true);
-  const gardenRef = useRef<HTMLDivElement>(null);
-  const { toast } = useToast();
+interface GardenGridProps {
+  plants: Plant[];
+  onPlantClick: (plant: Plant) => void;
+  selectedPlant: Plant | null;
+  similarPlants: (Plant & { compatibilityScore?: number })[];
+}
+
+export function GardenGrid({
+  plants,
+  onPlantClick,
+  selectedPlant,
+  similarPlants,
+}: GardenGridProps) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [zoom, setZoom] = useState(1);
+
+  const handleWheel = (e: React.WheelEvent) => {
+    e.preventDefault();
+    const delta = e.deltaY > 0 ? -0.05 : 0.05;
+    setZoom((prev) => Math.min(Math.max(prev + delta, 0.5), 2));
+  };
 
   useEffect(() => {
-    loadPlants();
-  }, []);
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
-  const loadPlants = async () => {
-    try {
-      const data = await getAllPlants();
-      setPlants(data);
-    } catch (error) {
-      toast({
-        title: "Error loading garden",
-        description: "Could not load plants. Make sure the backend server is running.",
-        variant: "destructive",
+    // Adjust canvas size to match container
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (selectedPlant && similarPlants.length > 0) {
+      ctx.strokeStyle = "rgba(34,139,34,0.3)";
+      ctx.lineWidth = 2;
+
+      similarPlants.forEach((sp) => {
+        const startEl = document.getElementById(`plant-${selectedPlant.id}`);
+        const endEl = document.getElementById(`plant-${sp.id}`);
+        if (startEl && endEl) {
+          const startRect = startEl.getBoundingClientRect();
+          const endRect = endEl.getBoundingClientRect();
+          const canvasRect = canvas.getBoundingClientRect();
+
+          ctx.beginPath();
+          ctx.moveTo(
+            (startRect.left + startRect.width / 2 - canvasRect.left) / zoom,
+            (startRect.top + startRect.height / 2 - canvasRect.top) / zoom
+          );
+          ctx.lineTo(
+            (endRect.left + endRect.width / 2 - canvasRect.left) / zoom,
+            (endRect.top + endRect.height / 2 - canvasRect.top) / zoom
+          );
+          ctx.stroke();
+        }
       });
-    } finally {
-      setLoading(false);
     }
-  };
+  }, [selectedPlant, similarPlants, plants, zoom]);
 
-  const handlePlantClick = (plant: Plant) => {
-    setSelectedPlant(plant);
-    // Reset similarPlants until user clicks View Similar
-    setSimilarPlants([]);
-  };
-
-  const handleViewSimilar = () => {
-    if (!selectedPlant) return;
-
-    const sims = plants
-      .filter((p) => p.id !== selectedPlant.id)
-      .map((p) => ({
-        ...p,
-        compatibilityScore: calculateSimilarity(selectedPlant, p),
-      }))
-      .filter((p) => p.compatibilityScore > 0.3) // show only reasonable matches
-      .sort((a, b) => b.compatibilityScore - a.compatibilityScore)
-      .slice(0, 5); // top 5
-
-    setSimilarPlants(sims);
-  };
-
-  // Zoom handling
-  useEffect(() => {
-    const el = gardenRef.current;
-    if (!el) return;
-
-    let scale = 1;
-    const handleWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      scale += e.deltaY * -0.001;
-      scale = Math.min(Math.max(0.5, scale), 2);
-      el.style.transform = `scale(${scale})`;
-    };
-
-    el.addEventListener("wheel", handleWheel, { passive: false });
-    return () => el.removeEventListener("wheel", handleWheel);
-  }, []);
+  if (plants.length === 0) {
+    return (
+      <div className="text-center py-20">
+        <p className="text-6xl mb-4">🌱</p>
+        <p className="text-lg text-muted-foreground">
+          The garden is empty. Be the first to plant!
+        </p>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header />
-
-      <main className="flex-1 py-12 px-4">
-        <div className="container mx-auto max-w-7xl">
-          <div className="text-center mb-12">
-            <h1 className="font-heading text-4xl md:text-5xl font-bold text-soft-brown mb-4">
-              The Living Garden
-            </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Click a plant to view its details and optionally see similar plants
-            </p>
-          </div>
-
-          {loading ? (
-            <div className="flex justify-center items-center py-20">
-              <Loader2 className="w-8 h-8 animate-spin text-leaf" />
-            </div>
-          ) : (
-            <div ref={gardenRef} className="origin-top-left relative">
-              <GardenGrid
-                plants={plants}
-                onPlantClick={handlePlantClick}
-                selectedPlant={selectedPlant}
-                similarPlants={similarPlants}
-              />
-            </div>
-          )}
-        </div>
-      </main>
-
-      <PlantModal
-        plant={selectedPlant}
-        isOpen={!!selectedPlant}
-        onClose={() => setSelectedPlant(null)}
-        similarPlants={similarPlants}
-        onViewSimilar={handleViewSimilar}
+    <div
+      className="relative w-full h-full"
+      onWheel={handleWheel}
+      style={{ transform: `scale(${zoom})`, transformOrigin: "top left" }}
+    >
+      <canvas
+        ref={canvasRef}
+        className="absolute top-0 left-0 w-full h-full pointer-events-none z-0"
       />
-
-      <Footer />
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 relative z-10">
+        {plants.map((plant) => (
+          <PlantCard
+            key={plant.id}
+            id={`plant-${plant.id}`}
+            plant={plant as Plant & { compatibilityScore?: number }}
+            onClick={() => onPlantClick(plant)}
+            compatibilityScore={
+              selectedPlant && similarPlants.find((p) => p.id === plant.id)?.compatibilityScore
+            }
+          />
+        ))}
+      </div>
     </div>
   );
-};
-
-export default Garden;
+}

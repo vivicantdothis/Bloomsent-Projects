@@ -1,6 +1,6 @@
-# Living Garden - Setup Guide
+# Bloom: The Living Garden
 
-A beautiful full-stack app where users anonymously plant their personality and music in a shared garden.
+Hi! I'm Saanvi. For my DSA project, we were tasked to create a web application that displayed a unique use of basic DSA concepts. So, after consideration and many (tireless) nights spent debating whether creating an ACTUAL physics-based universe was worth it, I settled on bloom. bloom is a beautiful full-stack app where users anonymously plant their personality and music in a shared garden.
 
 ## Tech Stack
 
@@ -131,26 +131,6 @@ The app uses **cosine similarity** to cluster plants by personality:
 
 See `src/lib/clustering.ts` for implementation.
 
-## Deployment
-
-### Frontend (Netlify/Vercel)
-
-1. Build the frontend:
-```bash
-npm run build
-```
-
-2. Deploy `dist` folder to your hosting service
-
-3. Set environment variable:
-   - `VITE_API_URL` = your backend URL
-
-### Backend (Render/Railway/Fly.io)
-
-1. Deploy the `server` folder
-2. Set `PORT` environment variable (or use default 3001)
-3. Make sure `plants.json` is writable
-
 ## Design System
 
 Colors (Polaroid + Scrapbook aesthetic):
@@ -161,20 +141,4 @@ Colors (Polaroid + Scrapbook aesthetic):
 - Leaf green for nature
 - Soft brown for text
 
-Fonts:
-- Playfair Display (serif headings)
-- Inter (body text)
-- Patrick Hand (handwritten accents)
 
-## Future Enhancements
-
-- [ ] Real Spotify API integration with search
-- [ ] Real-time updates (Socket.io)
-- [ ] Garden filters by mood
-- [ ] Plant evolution (grows over time)
-- [ ] Export garden as image
-- [ ] Mobile app version
-
-## License
-
-MIT
