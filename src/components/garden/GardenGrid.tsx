@@ -2,6 +2,17 @@ import { Plant } from "@/lib/types";
 import { PlantCard } from "./PlantCard";
 import { useEffect, useRef, useState } from "react";
 
+// Define emojis for each plant type
+const plantEmojis: Record<string, string> = {
+  Sunflower: "🌻",
+  Willow: "🌿",
+  Cactus: "🌵",
+  Marigold: "🌼",
+  Lavender: "💜",
+  Protea: "🌺",
+  // Add more types here
+};
+
 interface GardenGridProps {
   plants: Plant[];
   onPlantClick: (plant: Plant) => void;
@@ -73,29 +84,35 @@ export function GardenGrid({
   }
 
   return (
-    <div
-      className="relative w-full h-full"
-      onWheel={handleWheel}
-      style={{ transform: `scale(${zoom})`, transformOrigin: "top left" }}
-    >
-      <canvas
-        ref={canvasRef}
-        className="absolute top-0 left-0 w-full h-full pointer-events-none z-0"
-      />
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 relative z-10 p-4">
-        {plants.map((plant) => {
-          const similarPlant = similarPlants.find((p) => p.id === plant.id);
-          return (
-            <PlantCard
-              key={plant.id}
-              id={`plant-${plant.id}`}
-              plant={plant}
-              onClick={() => onPlantClick(plant)}
-              compatibilityScore={similarPlant?.compatibilityScore}
-            />
-          );
-        })}
-      </div>
+  <div
+    className="relative w-full h-full"
+    onWheel={handleWheel}
+    style={{ transform: `scale(${zoom})`, transformOrigin: "top left" }}
+  >
+    <canvas
+      ref={canvasRef}
+      className="absolute top-0 left-0 w-full h-full pointer-events-none z-0"
+    />
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 relative z-10 p-4">
+      {plants.map((plant) => {
+        const similarPlant = similarPlants.find((p) => p.id === plant.id);
+        const emoji = plantEmojis[plant.personalityType] || "🌱";
+
+        return (
+          <PlantCard
+            key={plant.id}
+            id={`plant-${plant.id}`}
+            plant={{ ...plant, emoji }}
+            onClick={() => onPlantClick(plant)}
+            compatibilityScore={similarPlant?.compatibilityScore}
+          />
+        );
+      })}
     </div>
-  );
-}
+
+    {/* PlantModal rendered here */}
+    {selectedPlant && (
+      <PlantModal plant={selectedPlant} onClose={() => onPlantClick(null)} />
+    )}
+  </div>
+);

@@ -1,36 +1,35 @@
-import { Plant } from "@/lib/types";
 import { Music } from "lucide-react";
+import { Plant } from "@/lib/types";
 
 interface PlantCardProps {
-  plant: Plant;
+  plant: Plant & { emoji?: string };
   onClick: () => void;
   id: string;
+  compatibilityScore?: number;
 }
 
-const plantEmojis: Record<string, string> = {
-  Sunflower: "🌻",
-  Willow: "🌿",
-  Cactus: "🌵",
-  Marigold: "🌼",
-  Lavender: "💜",
-  Protea: "🌺",
-};
-
-export function PlantCard({ plant, onClick, id }: PlantCardProps) {
-  const emoji = plantEmojis[plant.personalityType] || "🌱";
+export function PlantCard({ plant, onClick, id, compatibilityScore }: PlantCardProps) {
+  const emoji = plant.emoji || "🌱";
 
   return (
     <button
       id={id}
       onClick={onClick}
-      className="scrapbook-card hover-lift flex flex-col items-center justify-center min-h-[180px] relative"
+      className="group relative scrapbook-card hover-lift cursor-pointer text-center min-h-[180px] flex flex-col items-center justify-center"
     >
-      <div className="plant-emoji text-6xl mb-2">{emoji}</div>
-      <h3 className="plant-type text-lg">{plant.personalityType}</h3>
+      <div className="text-6xl mb-2 transition-transform group-hover:scale-110">{emoji}</div>
+      <h3 className="font-heading text-lg text-soft-brown mb-1">{plant.personalityType}</h3>
+
       {plant.songUrl && (
-        <div className="song-indicator flex items-center gap-1 text-xs mt-1">
+        <div className="flex items-center gap-1 text-xs text-muted-foreground mb-1">
           <Music className="w-3 h-3" />
-          Has a song
+          <span>Has a song</span>
+        </div>
+      )}
+
+      {typeof compatibilityScore === "number" && (
+        <div className="absolute -top-1 -left-1 w-6 h-6 bg-leaf/20 rounded-full border-2 border-leaf/40 flex items-center justify-center text-xs text-leaf">
+          {Math.round(compatibilityScore)}
         </div>
       )}
     </button>
