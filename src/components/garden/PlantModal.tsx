@@ -2,10 +2,10 @@ import { Plant } from "@/lib/types";
 import { X, ExternalLink, Music } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-interface PlantSidePanelProps {
+interface PlantModalProps {
   plant: Plant | null;
   onClose: () => void;
-  similarPlants?: (Plant & { compatibilityScore: number })[];
+  similarPlants?: (Plant & { compatibilityScore?: number })[];
 }
 
 const plantEmojis: Record<string, string> = {
@@ -17,7 +17,7 @@ const plantEmojis: Record<string, string> = {
   Protea: "🌺",
 };
 
-export function PlantSidePanel({ plant, onClose, similarPlants }: PlantSidePanelProps) {
+export function PlantModal({ plant, onClose, similarPlants }: PlantModalProps) {
   if (!plant) return null;
 
   const emoji = plantEmojis[plant.personalityType] || "🌱";
@@ -50,16 +50,13 @@ export function PlantSidePanel({ plant, onClose, similarPlants }: PlantSidePanel
           </div>
         )}
 
-        {/* Spotify embed or button */}
+        {/* Spotify / song */}
         {spotifyEmbedUrl ? (
           <iframe
             src={spotifyEmbedUrl}
-            width="100%"
-            height="152"
+            className="spotify-embed"
             frameBorder="0"
             allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-            loading="lazy"
-            className="spotify-embed"
           />
         ) : plant.songUrl ? (
           <Button asChild variant="outline" className="spotify-button">
@@ -72,14 +69,14 @@ export function PlantSidePanel({ plant, onClose, similarPlants }: PlantSidePanel
         {/* Similar plants */}
         {similarPlants && similarPlants.length > 0 && (
           <div className="similar-plants-container">
-            {similarPlants.map((similar) => (
-              <div key={similar.id} className="similar-plant-card">
+            {similarPlants.map((sp) => (
+              <div key={sp.id} className="similar-plant-card">
                 <span className="similar-plant-emoji">
-                  {plantEmojis[similar.personalityType] || "🌱"}
+                  {plantEmojis[sp.personalityType] || "🌱"}
                 </span>
                 <span className="similar-plant-score">
-                  {similar.compatibilityScore
-                    ? `${(similar.compatibilityScore * 100).toFixed(0)}%`
+                  {sp.compatibilityScore
+                    ? `${(sp.compatibilityScore * 100).toFixed(0)}%`
                     : ""}
                 </span>
               </div>
