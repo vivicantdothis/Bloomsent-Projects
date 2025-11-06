@@ -1,8 +1,12 @@
 import { X } from "lucide-react";
 import { Plant } from "@/lib/types";
 
+interface PlantWithEmoji extends Plant {
+  emoji?: string;
+}
+
 interface PlantModalProps {
-  plant: Plant | null;
+  plant: PlantWithEmoji | null;
   onClose: () => void;
 }
 

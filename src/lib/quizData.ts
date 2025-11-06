@@ -66,14 +66,14 @@ export function calculatePersonality(
   const max = Math.max(warmth, calm, bold);
 
   let type = "";
-  if (warmth === max) type = "SUNFLOWER";
-  else if (calm === max) type = "WILLOW";
-  else type = "CACTUS";
+  if (warmth === max) type = "Sunflower";
+  else if (calm === max) type = "Willow";
+  else type = "Cactus";
 
   // Handle ties
-  if (warmth === calm && warmth > bold) type = "MARIGOLD";
-  else if (calm === bold && calm > warmth) type = "LAVENDER";
-  else if (warmth === bold && warmth > calm) type = "PROTEA";
+  if (warmth === calm && warmth > bold) type = "Marigold";
+  else if (calm === bold && calm > warmth) type = "Lavender";
+  else if (warmth === bold && warmth > calm) type = "Protea";
 
   return { type, vector: normalized };
 }
