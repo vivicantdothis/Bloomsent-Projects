@@ -44,10 +44,10 @@
 
 /* Polaroid-style Plant Cards */
 .scrapbook-card {
-  background: #fff8e6; /* softer cream */
+  background: #fffbe6; /* cream background */
   border: 2px solid #d6c7a1; /* soft brown border */
   border-radius: 12px;
-  box-shadow: 0 6px 10px rgba(0,0,0,0.12);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
   transition: transform 0.2s, box-shadow 0.2s;
   padding: 1rem;
   text-align: center;
@@ -55,7 +55,7 @@
 }
 .scrapbook-card:hover {
   transform: translateY(-4px) rotate(-1deg);
-  box-shadow: 0 12px 18px rgba(0,0,0,0.18);
+  box-shadow: 0 12px 20px rgba(0,0,0,0.2);
 }
 
 /* Plant Emoji */
@@ -91,9 +91,9 @@
   right: 0;
   top: 0;
   height: 100%;
-  width: 24rem;
-  background-color: #fff8e6; /* softer cream */
-  box-shadow: -4px 0 12px rgba(0,0,0,0.18);
+  width: 26rem;
+  background-color: #fffbe6; /* cream background */
+  box-shadow: -4px 0 12px rgba(0,0,0,0.2);
   z-index: 50;
   overflow-y: auto;
   display: flex;
@@ -166,7 +166,7 @@
 }
 .spotify-button {
   border: 2px solid #d6c7a1;
-  background-color: #fff8e6;
+  background-color: #fffbe6;
   color: #8b5e3c;
   border-radius: 8px;
   padding: 0.5rem 1rem;
@@ -185,7 +185,7 @@
   gap: 0.5rem;
 }
 .similar-plant-card {
-  background-color: #fff8e6;
+  background-color: #fffbe6;
   border: 1px solid #d6c7a1;
   border-radius: 8px;
   padding: 0.5rem;
