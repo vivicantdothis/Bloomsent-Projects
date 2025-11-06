@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Plant } from "@/lib/types";
 import { X, ExternalLink } from "lucide-react";
 import {
@@ -12,7 +13,8 @@ interface PlantModalProps {
   plant: Plant | null;
   isOpen: boolean;
   onClose: () => void;
-  similarPlants?: Plant[];
+  similarPlants?: (Plant & { compatibilityScore?: number })[];
+  onViewSimilar?: () => void; // New prop for "View Similar" action
 }
 
 const plantEmojis: Record<string, string> = {
@@ -24,13 +26,26 @@ const plantEmojis: Record<string, string> = {
   Protea: "🌺",
 };
 
-export function PlantModal({ plant, isOpen, onClose, similarPlants }: PlantModalProps) {
+export function PlantModal({
+  plant,
+  isOpen,
+  onClose,
+  similarPlants,
+  onViewSimilar,
+}: PlantModalProps) {
+  const [showSimilar, setShowSimilar] = useState(false);
+
   if (!plant) return null;
 
   const emoji = plantEmojis[plant.personalityType] || "🌱";
   const spotifyEmbedUrl = plant.songUrl.includes("open.spotify.com")
     ? plant.songUrl.replace("/track/", "/embed/track/")
     : null;
+
+  const handleViewSimilarClick = () => {
+    setShowSimilar(true);
+    if (onViewSimilar) onViewSimilar();
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -71,16 +86,40 @@ export function PlantModal({ plant, isOpen, onClose, similarPlants }: PlantModal
             </Button>
           ) : null}
 
-          {similarPlants && similarPlants.length > 0 && (
-            <div className="pt-4 border-t border-soft-brown/10">
-              <p className="text-sm text-muted-foreground mb-2 text-hand">
-                You might also like these plants:
+          {/* View Similar Button */}
+          {!showSimilar && similarPlants && similarPlants.length > 0 && (
+            <Button
+              variant="outline"
+              className="w-full mt-2"
+              onClick={handleViewSimilarClick}
+            >
+              View Similar Plants
+            </Button>
+          )}
+
+          {/* Similar Plants Section */}
+          {showSimilar && similarPlants && similarPlants.length > 0 && (
+            <div className="pt-4 border-t border-soft-brown/10 space-y-2">
+              <p className="text-sm text-muted-foreground mb-2">
+                Similar plants and compatibility scores:
               </p>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-3">
                 {similarPlants.map((similar) => (
-                  <span key={similar.id} className="text-2xl">
-                    {plantEmojis[similar.personalityType] || "🌱"}
-                  </span>
+                  <div
+                    key={similar.id}
+                    className="bg-cream p-2 rounded-lg border border-soft-brown/10 flex flex-col items-center"
+                  >
+                    <span className="text-2xl">
+                      {plantEmojis[similar.personalityType] || "🌱"}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      {similar.compatibilityScore
+                        ? `Score: ${(
+                            similar.compatibilityScore * 100
+                          ).toFixed(0)}%`
+                        : ""}
+                    </span>
+                  </div>
                 ))}
               </div>
             </div>

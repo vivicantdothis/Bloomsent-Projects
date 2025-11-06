@@ -13,6 +13,7 @@ const Garden = () => {
   const [plants, setPlants] = useState<Plant[]>([]);
   const [selectedPlant, setSelectedPlant] = useState<Plant | null>(null);
   const [similarPlants, setSimilarPlants] = useState<Plant[]>([]);
+  const [showSimilar, setShowSimilar] = useState(false);
   const [loading, setLoading] = useState(true);
   const gardenRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
@@ -28,7 +29,8 @@ const Garden = () => {
     } catch (error) {
       toast({
         title: "Error loading garden",
-        description: "Could not load plants. Make sure the backend server is running.",
+        description:
+          "Could not load plants. Make sure the backend server is running.",
         variant: "destructive",
       });
     } finally {
@@ -38,8 +40,15 @@ const Garden = () => {
 
   const handlePlantClick = (plant: Plant) => {
     setSelectedPlant(plant);
-    const similar = getSimilarPlants(plant, plants);
+    setShowSimilar(false);
+    setSimilarPlants([]);
+  };
+
+  const handleViewSimilar = () => {
+    if (!selectedPlant) return;
+    const similar = getSimilarPlants(selectedPlant, plants);
     setSimilarPlants(similar);
+    setShowSimilar(true);
   };
 
   // Zoom handling on the container
@@ -51,7 +60,7 @@ const Garden = () => {
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
       scale += e.deltaY * -0.001;
-      scale = Math.min(Math.max(0.5, scale), 2); // clamp zoom between 0.5x and 2x
+      scale = Math.min(Math.max(0.5, scale), 2); // clamp zoom
       el.style.transform = `scale(${scale})`;
     };
 
@@ -70,7 +79,8 @@ const Garden = () => {
               The Living Garden
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Click on any plant to view its details and connected similar plants
+              Click on any plant to view its songs/messages and discover similar
+              plants
             </p>
           </div>
 
@@ -84,7 +94,7 @@ const Garden = () => {
                 plants={plants}
                 onPlantClick={handlePlantClick}
                 selectedPlant={selectedPlant}
-                similarPlants={similarPlants}
+                similarPlants={showSimilar ? similarPlants : []}
               />
             </div>
           )}
@@ -95,7 +105,8 @@ const Garden = () => {
         plant={selectedPlant}
         isOpen={!!selectedPlant}
         onClose={() => setSelectedPlant(null)}
-        similarPlants={similarPlants}
+        similarPlants={showSimilar ? similarPlants : []}
+        onViewSimilar={handleViewSimilar}
       />
 
       <Footer />
