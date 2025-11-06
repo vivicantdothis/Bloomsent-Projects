@@ -5,7 +5,7 @@
   padding: 2rem;
   text-align: center;
   font-family: 'Helvetica Neue', Arial, sans-serif;
-  background-color: #fefcf5; /* soft background for garden */
+  background-color: #fefcf5; /* soft cream background */
 }
 
 /* Logo animations */
@@ -44,10 +44,10 @@
 
 /* Polaroid-style Plant Cards */
 .scrapbook-card {
-  background: #fffbe6; /* soft cream background */
+  background: #fff8e6; /* softer cream */
   border: 2px solid #d6c7a1; /* soft brown border */
   border-radius: 12px;
-  box-shadow: 0 6px 10px rgba(0,0,0,0.15);
+  box-shadow: 0 6px 10px rgba(0,0,0,0.12);
   transition: transform 0.2s, box-shadow 0.2s;
   padding: 1rem;
   text-align: center;
@@ -55,7 +55,7 @@
 }
 .scrapbook-card:hover {
   transform: translateY(-4px) rotate(-1deg);
-  box-shadow: 0 12px 20px rgba(0,0,0,0.2);
+  box-shadow: 0 12px 18px rgba(0,0,0,0.18);
 }
 
 /* Plant Emoji */
@@ -82,7 +82,7 @@
   align-items: center;
   justify-content: center;
   font-size: 0.75rem;
-  color: #556b2f; /* dark green */
+  color: #556b2f; /* leaf green */
 }
 
 /* Plant Side Panel */
@@ -92,8 +92,8 @@
   top: 0;
   height: 100%;
   width: 24rem;
-  background-color: #fffbe6;
-  box-shadow: -4px 0 12px rgba(0,0,0,0.2);
+  background-color: #fff8e6; /* softer cream */
+  box-shadow: -4px 0 12px rgba(0,0,0,0.18);
   z-index: 50;
   overflow-y: auto;
   display: flex;
@@ -144,7 +144,7 @@
 
 /* Plant messages */
 .plant-message {
-  background-color: #fff8dc;
+  background-color: #fff9e0;
   border: 1px solid #d6c7a1;
   border-radius: 8px;
   padding: 0.75rem;
@@ -166,7 +166,7 @@
 }
 .spotify-button {
   border: 2px solid #d6c7a1;
-  background-color: #fffbe6;
+  background-color: #fff8e6;
   color: #8b5e3c;
   border-radius: 8px;
   padding: 0.5rem 1rem;
@@ -174,7 +174,7 @@
   text-align: center;
 }
 .spotify-button:hover {
-  background-color: #f9f2d9;
+  background-color: #fff3d1;
   transform: scale(1.05);
 }
 
@@ -185,7 +185,7 @@
   gap: 0.5rem;
 }
 .similar-plant-card {
-  background-color: #fffbe6;
+  background-color: #fff8e6;
   border: 1px solid #d6c7a1;
   border-radius: 8px;
   padding: 0.5rem;
