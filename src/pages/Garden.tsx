@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { GardenGrid } from "@/components/garden/GardenGrid";
-import { PlantSidePanel } from "@/components/garden/PlantSidePanel";
+import { PlantSidePanel } from "@/components/garden/PlantModal";
 import { getAllPlants } from "@/lib/api";
 import { getSimilarPlants } from "@/lib/clustering";
 import { Plant } from "@/lib/types";
