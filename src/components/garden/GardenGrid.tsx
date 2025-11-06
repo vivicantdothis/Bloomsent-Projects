@@ -2,21 +2,12 @@ import { Plant } from "@/lib/types";
 import { PlantCard } from "./PlantCard";
 import { useEffect, useRef, useState } from "react";
 
-// Define emojis for each plant type
-const plantEmojis: Record<string, string> = {
-  Sunflower: "🌻",
-  Willow: "🌿",
-  Cactus: "🌵",
-  Marigold: "🌼",
-  Lavender: "💜",
-  Protea: "🌺",
-};
-
 interface GardenGridProps {
   plants: Plant[];
+  onPlantClick: (plant: Plant) => void; // navigate to detail page
 }
 
-export function GardenGrid({ plants }: GardenGridProps) {
+export function GardenGrid({ plants, onPlantClick }: GardenGridProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [zoom, setZoom] = useState(1);
 
@@ -59,10 +50,13 @@ export function GardenGrid({ plants }: GardenGridProps) {
         className="absolute top-0 left-0 w-full h-full pointer-events-none z-0"
       />
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 relative z-10 p-4">
-        {plants.map((plant) => {
-          const emoji = plantEmojis[plant.personalityType] || "🌱";
-          return <PlantCard key={plant.id} plant={{ ...plant, emoji }} />;
-        })}
+        {plants.map((plant) => (
+          <PlantCard
+            key={plant.id}
+            plant={plant}
+            onClick={() => onPlantClick(plant)}
+          />
+        ))}
       </div>
     </div>
   );

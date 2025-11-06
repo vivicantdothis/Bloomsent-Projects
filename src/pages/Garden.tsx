@@ -1,20 +1,18 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { GardenGrid } from "@/components/garden/GardenGrid";
 import { getAllPlants } from "@/lib/api";
-import { getSimilarPlants } from "@/lib/clustering";
 import { Plant } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 
 const Garden = () => {
   const [plants, setPlants] = useState<Plant[]>([]);
-  const [selectedPlant, setSelectedPlant] = useState<Plant | null>(null);
-  const [similarPlants, setSimilarPlants] = useState<(Plant & { compatibilityScore: number })[]>([]);
   const [loading, setLoading] = useState(true);
-  const gardenRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
     loadPlants();
@@ -35,14 +33,9 @@ const Garden = () => {
     }
   };
 
-  const handlePlantClick = (plant: Plant | null) => {
-    setSelectedPlant(plant);
-    if (plant) {
-      const sims = getSimilarPlants(plant, plants);
-      setSimilarPlants(sims);
-    } else {
-      setSimilarPlants([]);
-    }
+  const handlePlantClick = (plant: Plant) => {
+    // Navigate to plant detail page
+    navigate(`/plant/${plant.id}`);
   };
 
   return (
@@ -56,7 +49,7 @@ const Garden = () => {
               The Living Garden
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Click on any plant to view its songs/messages and discover similar plants
+              Click on any plant to view its song and discover similar plants
             </p>
           </div>
 
@@ -65,14 +58,10 @@ const Garden = () => {
               <Loader2 className="w-8 h-8 animate-spin text-leaf" />
             </div>
           ) : (
-            <div ref={gardenRef} className="origin-top-left relative">
-              <GardenGrid
-                plants={plants}
-                onPlantClick={handlePlantClick}
-                selectedPlant={selectedPlant}
-                similarPlants={selectedPlant ? similarPlants : []}
-              />
-            </div>
+            <GardenGrid
+              plants={plants}
+              onPlantClick={handlePlantClick}
+            />
           )}
         </div>
       </main>

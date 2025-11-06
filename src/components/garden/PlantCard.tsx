@@ -1,15 +1,26 @@
 import { Plant } from "@/lib/types";
-import { useRouter } from "next/router";
+import { useNavigate } from "react-router-dom";
+
+const plantEmojis: Record<string, string> = {
+  Sunflower: "🌻",
+  Willow: "🌿",
+  Cactus: "🌵",
+  Marigold: "🌼",
+  Lavender: "💜",
+  Protea: "🌺",
+};
 
 interface PlantCardProps {
-  plant: Plant & { emoji?: string };
+  plant: Plant;
 }
 
 export function PlantCard({ plant }: PlantCardProps) {
-  const router = useRouter();
+  const navigate = useNavigate();
+  const emoji = plantEmojis[plant.personalityType] || "🌱";
 
   const handleClick = () => {
-    router.push(`/plants/${plant.id}`);
+    // Navigate to PlantDetail page with plant ID
+    navigate(`/plants/plantdetails/${plant.id}`, { state: { plant } });
   };
 
   return (
@@ -17,13 +28,8 @@ export function PlantCard({ plant }: PlantCardProps) {
       className="scrapbook-card cursor-pointer flex flex-col items-center justify-center text-center p-4 hover-lift transition-transform"
       onClick={handleClick}
     >
-      {/* Emoji */}
-      <div className="text-5xl mb-2">{plant.emoji || "🌱"}</div>
-
-      {/* Plant Name + Emoji */}
+      <div className="text-5xl mb-2">{emoji}</div>
       <div className="font-bold text-lg mb-1">{plant.personalityType}</div>
-
-      {/* Song indicator */}
       {plant.songUrl && (
         <div className="text-sm mt-2 text-soft-brown">🎵 Has Song</div>
       )}
