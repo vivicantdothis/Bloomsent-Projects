@@ -1,29 +1,31 @@
 import { Plant } from "@/lib/types";
+import { useRouter } from "next/router";
 
 interface PlantCardProps {
-  id?: string;
   plant: Plant & { emoji?: string };
-  onClick: () => void;
-  compatibilityScore?: number;
 }
 
-export function PlantCard({ id, plant, onClick, compatibilityScore }: PlantCardProps) {
+export function PlantCard({ plant }: PlantCardProps) {
+  const router = useRouter();
+
+  const handleClick = () => {
+    router.push(`/plants/${plant.id}`);
+  };
+
   return (
     <div
-      id={id}
-      className="scrapbook-card hover-lift cursor-pointer relative"
-      onClick={onClick}
+      className="scrapbook-card cursor-pointer flex flex-col items-center justify-center text-center p-4 hover-lift transition-transform"
+      onClick={handleClick}
     >
-      <div className="plant-emoji text-4xl mb-2">{plant.emoji || "🌱"}</div>
+      {/* Emoji */}
+      <div className="text-5xl mb-2">{plant.emoji || "🌱"}</div>
 
-      <div className="plant-type text-hand font-bold text-soft-brown mb-1">
-        {plant.personalityType}
-      </div>
+      {/* Plant Name + Emoji */}
+      <div className="font-bold text-lg mb-1">{plant.personalityType}</div>
 
-      {compatibilityScore !== undefined && (
-        <div className="song-indicator text-xs text-foreground">
-          Compatibility: {Math.round(compatibilityScore)}
-        </div>
+      {/* Song indicator */}
+      {plant.songUrl && (
+        <div className="text-sm mt-2 text-soft-brown">🎵 Has Song</div>
       )}
     </div>
   );

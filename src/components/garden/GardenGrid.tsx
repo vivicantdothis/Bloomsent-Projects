@@ -1,9 +1,8 @@
 import { Plant } from "@/lib/types";
 import { PlantCard } from "./PlantCard";
-import { PlantModal } from "./PlantModal";
 import { useEffect, useRef, useState } from "react";
 
-// Emojis for plant types
+// Define emojis for each plant type
 const plantEmojis: Record<string, string> = {
   Sunflower: "🌻",
   Willow: "🌿",
@@ -15,17 +14,9 @@ const plantEmojis: Record<string, string> = {
 
 interface GardenGridProps {
   plants: Plant[];
-  onPlantClick: (plant: Plant | null) => void;
-  selectedPlant: Plant | null;
-  similarPlants: (Plant & { compatibilityScore: number })[];
 }
 
-export function GardenGrid({
-  plants,
-  onPlantClick,
-  selectedPlant,
-  similarPlants,
-}: GardenGridProps) {
+export function GardenGrid({ plants }: GardenGridProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [zoom, setZoom] = useState(1);
 
@@ -44,33 +35,7 @@ export function GardenGrid({
     canvas.width = canvas.offsetWidth;
     canvas.height = canvas.offsetHeight;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    if (selectedPlant && similarPlants.length > 0) {
-      ctx.strokeStyle = "rgba(34,139,34,0.3)";
-      ctx.lineWidth = 2;
-
-      similarPlants.forEach((sp) => {
-        const startEl = document.getElementById(`plant-${selectedPlant.id}`);
-        const endEl = document.getElementById(`plant-${sp.id}`);
-        if (startEl && endEl) {
-          const startRect = startEl.getBoundingClientRect();
-          const endRect = endEl.getBoundingClientRect();
-          const canvasRect = canvas.getBoundingClientRect();
-
-          ctx.beginPath();
-          ctx.moveTo(
-            (startRect.left + startRect.width / 2 - canvasRect.left) / zoom,
-            (startRect.top + startRect.height / 2 - canvasRect.top) / zoom
-          );
-          ctx.lineTo(
-            (endRect.left + endRect.width / 2 - canvasRect.left) / zoom,
-            (endRect.top + endRect.height / 2 - canvasRect.top) / zoom
-          );
-          ctx.stroke();
-        }
-      });
-    }
-  }, [selectedPlant, similarPlants, plants, zoom]);
+  }, [plants, zoom]);
 
   if (plants.length === 0) {
     return (
@@ -84,40 +49,21 @@ export function GardenGrid({
   }
 
   return (
-    <>
-      <div
-        className="relative w-full h-full"
-        onWheel={handleWheel}
-        style={{ transform: `scale(${zoom})`, transformOrigin: "top left" }}
-      >
-        <canvas
-          ref={canvasRef}
-          className="absolute top-0 left-0 w-full h-full pointer-events-none z-0"
-        />
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 relative z-10 p-4">
-          {plants.map((plant) => {
-            const similarPlant = similarPlants.find((p) => p.id === plant.id);
-            const emoji = plantEmojis[plant.personalityType] || "🌱";
-
-            return (
-              <PlantCard
-                key={plant.id}
-                id={`plant-${plant.id}`}
-                plant={{ ...plant, emoji }}
-                onClick={() => onPlantClick({ ...plant, emoji })}
-                compatibilityScore={similarPlant?.compatibilityScore}
-              />
-            );
-          })}
-        </div>
+    <div
+      className="relative w-full h-full"
+      onWheel={handleWheel}
+      style={{ transform: `scale(${zoom})`, transformOrigin: "top left" }}
+    >
+      <canvas
+        ref={canvasRef}
+        className="absolute top-0 left-0 w-full h-full pointer-events-none z-0"
+      />
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 relative z-10 p-4">
+        {plants.map((plant) => {
+          const emoji = plantEmojis[plant.personalityType] || "🌱";
+          return <PlantCard key={plant.id} plant={{ ...plant, emoji }} />;
+        })}
       </div>
-
-      {selectedPlant && (
-        <PlantModal
-          plant={selectedPlant}
-          onClose={() => onPlantClick(null)}
-        />
-      )}
-    </>
+    </div>
   );
 }
