@@ -1,3 +1,4 @@
+// src/lib/clustering.ts
 import { Plant } from "./types";
 
 export function cosineSimilarity(a: number[], b: number[]): number {
@@ -49,14 +50,13 @@ export function getSimilarPlants(
     .filter((p) => p.id !== plant.id)
     .map((p) => ({
       ...p,
-      compatibilityScore: Math.round(
-        cosineSimilarity(plant.personalityVector, p.personalityVector) * 100
-      ),
+      compatibilityScore: cosineSimilarity(plant.personalityVector, p.personalityVector),
     }))
     .sort((a, b) => b.compatibilityScore - a.compatibilityScore)
     .slice(0, limit);
 }
 
+// Explicit export to fix the build error
 export function calculateSimilarity(plantA: Plant, plantB: Plant): number {
   return cosineSimilarity(plantA.personalityVector, plantB.personalityVector);
 }

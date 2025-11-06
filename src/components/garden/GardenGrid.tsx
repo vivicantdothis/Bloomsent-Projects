@@ -4,7 +4,7 @@ import { Footer } from "@/components/layout/Footer";
 import { GardenGrid } from "@/components/garden/GardenGrid";
 import { PlantModal } from "@/components/garden/PlantModal";
 import { getAllPlants } from "@/lib/api";
-import { calculateSimilarity } from "@/lib/clustering";
+import { calculateSimilarity, getSimilarPlants } from "@/lib/clustering";
 import { Plant } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
