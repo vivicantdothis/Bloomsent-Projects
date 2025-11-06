@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { GardenGrid } from "@/components/garden/GardenGrid";
-import { PlantModal } from "@/components/garden/PlantModal";
+import { PlantSidePanel } from "@/components/garden/PlantSidePanel";
 import { getAllPlants } from "@/lib/api";
 import { getSimilarPlants } from "@/lib/clustering";
 import { Plant } from "@/lib/types";
@@ -40,7 +40,7 @@ const Garden = () => {
   const handlePlantClick = (plant: Plant) => {
     setSelectedPlant(plant);
 
-    // Compute similar plants when a plant is clicked
+    // Compute similar plants with full data
     const sims = getSimilarPlants(plant, plants);
     setSimilarPlants(sims);
   };
@@ -54,7 +54,7 @@ const Garden = () => {
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
       scale += e.deltaY * -0.001;
-      scale = Math.min(Math.max(0.5, scale), 2); // clamp zoom
+      scale = Math.min(Math.max(0.5, scale), 2);
       el.style.transform = `scale(${scale})`;
     };
 
@@ -94,13 +94,13 @@ const Garden = () => {
         </div>
       </main>
 
-      {/* Side-panel modal now displays selected plant and similar plants */}
-      <PlantModal
-        plant={selectedPlant}
-        isOpen={!!selectedPlant}
-        onClose={() => setSelectedPlant(null)}
-        similarPlants={similarPlants}
-      />
+      {selectedPlant && (
+        <PlantSidePanel
+          plant={selectedPlant}
+          onClose={() => setSelectedPlant(null)}
+          similarPlants={similarPlants}
+        />
+      )}
 
       <Footer />
     </div>
