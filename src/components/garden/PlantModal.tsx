@@ -1,13 +1,11 @@
-// src/components/garden/PlantModal.tsx
 import { Plant } from "@/lib/types";
-import { X, ExternalLink } from "lucide-react";
+import { X, ExternalLink, Music } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-interface PlantModalProps {
+interface PlantSidePanelProps {
   plant: Plant | null;
-  isOpen: boolean;
   onClose: () => void;
-  similarPlants?: (Plant & { compatibilityScore?: number })[];
+  similarPlants?: (Plant & { compatibilityScore: number })[];
 }
 
 const plantEmojis: Record<string, string> = {
@@ -19,7 +17,7 @@ const plantEmojis: Record<string, string> = {
   Protea: "🌺",
 };
 
-export function PlantModal({ plant, onClose, similarPlants }: PlantModalProps) {
+export function PlantSidePanel({ plant, onClose, similarPlants }: PlantSidePanelProps) {
   if (!plant) return null;
 
   const emoji = plantEmojis[plant.personalityType] || "🌱";
@@ -29,6 +27,7 @@ export function PlantModal({ plant, onClose, similarPlants }: PlantModalProps) {
 
   return (
     <div className="plant-side-panel">
+      {/* Header */}
       <div className="side-panel-header">
         <h2>
           <span className="text-4xl">{emoji}</span> {plant.personalityType}
@@ -38,11 +37,12 @@ export function PlantModal({ plant, onClose, similarPlants }: PlantModalProps) {
         </button>
       </div>
 
+      {/* Main content */}
       <div className="side-panel-content">
-        {/* Plant Message */}
+        {/* Plant message */}
         {plant.message && (
           <div className="plant-message">
-            <p>"{plant.message}"</p>
+            "{plant.message}"
             <div className="plant-message-footer">
               {plant.messageFrom && <span>— {plant.messageFrom}</span>}
               {plant.messageTo && <span>To: {plant.messageTo}</span>}
@@ -50,44 +50,40 @@ export function PlantModal({ plant, onClose, similarPlants }: PlantModalProps) {
           </div>
         )}
 
-        {/* Spotify / Song */}
+        {/* Spotify embed or button */}
         {spotifyEmbedUrl ? (
           <iframe
             src={spotifyEmbedUrl}
-            height={152}
-            className="spotify-embed"
+            width="100%"
+            height="152"
             frameBorder="0"
             allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
             loading="lazy"
+            className="spotify-embed"
           />
         ) : plant.songUrl ? (
-          <Button asChild className="spotify-button">
+          <Button asChild variant="outline" className="spotify-button">
             <a href={plant.songUrl} target="_blank" rel="noopener noreferrer">
               Listen on Spotify <ExternalLink className="ml-2 w-4 h-4" />
             </a>
           </Button>
         ) : null}
 
-        {/* Similar Plants */}
+        {/* Similar plants */}
         {similarPlants && similarPlants.length > 0 && (
-          <div className="pt-4 border-t border-soft-brown/10">
-            <p className="text-sm text-muted-foreground mb-2">
-              Similar plants and compatibility scores:
-            </p>
-            <div className="similar-plants-container">
-              {similarPlants.map((sp) => (
-                <div key={sp.id} className="similar-plant-card">
-                  <span className="similar-plant-emoji">
-                    {plantEmojis[sp.personalityType] || "🌱"}
-                  </span>
-                  <span className="similar-plant-score">
-                    {sp.compatibilityScore !== undefined
-                      ? `${Math.round(sp.compatibilityScore * 100)}%`
-                      : ""}
-                  </span>
-                </div>
-              ))}
-            </div>
+          <div className="similar-plants-container">
+            {similarPlants.map((similar) => (
+              <div key={similar.id} className="similar-plant-card">
+                <span className="similar-plant-emoji">
+                  {plantEmojis[similar.personalityType] || "🌱"}
+                </span>
+                <span className="similar-plant-score">
+                  {similar.compatibilityScore
+                    ? `${(similar.compatibilityScore * 100).toFixed(0)}%`
+                    : ""}
+                </span>
+              </div>
+            ))}
           </div>
         )}
       </div>

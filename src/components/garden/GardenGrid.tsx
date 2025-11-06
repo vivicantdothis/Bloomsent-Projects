@@ -1,4 +1,3 @@
-// src/components/garden/GardenGrid.tsx
 import { Plant } from "@/lib/types";
 import { PlantCard } from "./PlantCard";
 import { useEffect, useRef, useState } from "react";
@@ -10,7 +9,12 @@ interface GardenGridProps {
   similarPlants: (Plant & { compatibilityScore: number })[];
 }
 
-export function GardenGrid({ plants, onPlantClick, selectedPlant, similarPlants }: GardenGridProps) {
+export function GardenGrid({
+  plants,
+  onPlantClick,
+  selectedPlant,
+  similarPlants,
+}: GardenGridProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [zoom, setZoom] = useState(1);
 
@@ -28,7 +32,6 @@ export function GardenGrid({ plants, onPlantClick, selectedPlant, similarPlants 
 
     canvas.width = canvas.offsetWidth;
     canvas.height = canvas.offsetHeight;
-
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     if (selectedPlant && similarPlants.length > 0) {
@@ -86,8 +89,9 @@ export function GardenGrid({ plants, onPlantClick, selectedPlant, similarPlants 
             <PlantCard
               key={plant.id}
               id={`plant-${plant.id}`}
-              plant={{ ...plant, compatibilityScore: similarPlant?.compatibilityScore }}
+              plant={plant}
               onClick={() => onPlantClick(plant)}
+              compatibilityScore={similarPlant?.compatibilityScore}
             />
           );
         })}

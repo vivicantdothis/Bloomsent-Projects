@@ -1,11 +1,11 @@
-// src/components/garden/PlantCard.tsx
 import { Plant } from "@/lib/types";
 import { Music } from "lucide-react";
 
 interface PlantCardProps {
-  plant: Plant & { compatibilityScore?: number };
+  plant: Plant;
   onClick: () => void;
   id: string;
+  compatibilityScore?: number;
 }
 
 const plantEmojis: Record<string, string> = {
@@ -17,26 +17,26 @@ const plantEmojis: Record<string, string> = {
   Protea: "🌺",
 };
 
-export function PlantCard({ plant, onClick, id }: PlantCardProps) {
+export function PlantCard({ plant, onClick, id, compatibilityScore }: PlantCardProps) {
   const emoji = plantEmojis[plant.personalityType] || "🌱";
 
   return (
     <button
       id={id}
       onClick={onClick}
-      className="scrapbook-card group relative min-h-[180px] flex flex-col items-center justify-center"
+      className="scrapbook-card group relative flex flex-col items-center justify-center min-h-[180px] text-center cursor-pointer"
     >
-      <div className="plant-emoji text-6xl mb-2 transition-transform group-hover:scale-110">{emoji}</div>
-      <h3 className="plant-type text-lg mb-1">{plant.personalityType}</h3>
+      <div className="plant-emoji mb-2 transition-transform group-hover:scale-110">{emoji}</div>
+      <h3 className="plant-type">{plant.personalityType}</h3>
       {plant.songUrl && (
-        <div className="song-indicator flex items-center gap-1 text-xs mb-1">
+        <div className="song-indicator flex items-center gap-1 text-xs">
           <Music className="w-3 h-3" />
           <span>Has a song</span>
         </div>
       )}
-      {plant.compatibilityScore !== undefined && (
-        <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-leaf/20 rounded-full border-2 border-leaf/40 flex items-center justify-center text-xs text-green-700 font-bold">
-          {Math.round(plant.compatibilityScore * 100)}%
+      {compatibilityScore !== undefined && (
+        <div className="similar-plant-score mt-1">
+          {(compatibilityScore * 100).toFixed(0)}%
         </div>
       )}
     </button>

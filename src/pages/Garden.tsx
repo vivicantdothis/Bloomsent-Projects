@@ -28,8 +28,7 @@ const Garden = () => {
     } catch (error) {
       toast({
         title: "Error loading garden",
-        description:
-          "Could not load plants. Make sure the backend server is running.",
+        description: "Could not load plants. Make sure the backend server is running.",
         variant: "destructive",
       });
     } finally {
@@ -39,13 +38,11 @@ const Garden = () => {
 
   const handlePlantClick = (plant: Plant) => {
     setSelectedPlant(plant);
-
-    // Compute similar plants with full data
     const sims = getSimilarPlants(plant, plants);
     setSimilarPlants(sims);
   };
 
-  // Zoom handling on the container
+  // Zoom handling
   useEffect(() => {
     const el = gardenRef.current;
     if (!el) return;
