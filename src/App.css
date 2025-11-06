@@ -42,12 +42,12 @@
   animation: bloom 0.6s ease-out;
 }
 
-/* Polaroid-style Plant Cards */
+/* Plant Cards */
 .scrapbook-card {
-  background: #fffbe6; /* cream background */
+  background: #fff8e6; /* soft cream */
   border: 2px solid #d6c7a1; /* soft brown border */
   border-radius: 12px;
-  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.12);
   transition: transform 0.2s, box-shadow 0.2s;
   padding: 1rem;
   text-align: center;
@@ -55,10 +55,8 @@
 }
 .scrapbook-card:hover {
   transform: translateY(-4px) rotate(-1deg);
-  box-shadow: 0 12px 20px rgba(0,0,0,0.2);
+  box-shadow: 0 12px 18px rgba(0,0,0,0.18);
 }
-
-/* Plant Emoji */
 .plant-emoji {
   font-size: 3rem;
   margin-bottom: 0.5rem;
@@ -67,42 +65,42 @@
 .scrapbook-card:hover .plant-emoji {
   transform: scale(1.2);
 }
-
-/* Plant Type */
 .plant-type {
   font-family: 'Courier New', Courier, monospace;
   font-weight: bold;
-  color: #8b5e3c; /* soft brown */
+  color: #8b5e3c;
   margin-bottom: 0.25rem;
 }
-
-/* Plant Song Indicator */
 .song-indicator {
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 0.75rem;
-  color: #556b2f; /* leaf green */
+  color: #556b2f;
 }
 
-/* Plant Side Panel */
+/* Side Panel / PlantModal */
 .plant-side-panel {
   position: fixed;
   right: 0;
   top: 0;
   height: 100%;
   width: 26rem;
-  background-color: #fffbe6; /* cream background */
-  box-shadow: -4px 0 12px rgba(0,0,0,0.2);
-  z-index: 50;
+  background-color: #fff8e6;
+  box-shadow: -4px 0 16px rgba(0,0,0,0.25);
+  z-index: 100;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   padding: 1rem;
   border-left: 2px solid #d6c7a1;
+  transform: translateX(100%);
+  transition: transform 0.3s ease-in-out;
+}
+.plant-side-panel.open {
+  transform: translateX(0);
 }
 
-/* Side panel header */
 .side-panel-header {
   display: flex;
   justify-content: space-between;
@@ -118,8 +116,6 @@
   align-items: center;
   gap: 0.5rem;
 }
-
-/* Close button */
 .close-btn {
   width: 2rem;
   height: 2rem;
@@ -134,7 +130,6 @@
   transform: scale(1.1);
 }
 
-/* Side panel content */
 .side-panel-content {
   flex: 1;
   display: flex;
@@ -166,7 +161,7 @@
 }
 .spotify-button {
   border: 2px solid #d6c7a1;
-  background-color: #fffbe6;
+  background-color: #fff8e6;
   color: #8b5e3c;
   border-radius: 8px;
   padding: 0.5rem 1rem;
@@ -178,14 +173,14 @@
   transform: scale(1.05);
 }
 
-/* Similar plants */
+/* Similar Plants */
 .similar-plants-container {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
 }
 .similar-plant-card {
-  background-color: #fffbe6;
+  background-color: #fff8e6;
   border: 1px solid #d6c7a1;
   border-radius: 8px;
   padding: 0.5rem;
@@ -200,13 +195,7 @@
 .similar-plant-score {
   font-size: 0.75rem;
   font-weight: bold;
-  color: #228b22; /* leaf green */
-}
-
-/* Loader */
-.loader {
-  color: #556b2f;
-  font-size: 2rem;
+  color: #228b22;
 }
 
 /* Canvas / lines */
@@ -216,4 +205,10 @@ canvas {
   left: 0;
   pointer-events: none;
   z-index: 0;
+}
+
+/* Loader */
+.loader {
+  color: #556b2f;
+  font-size: 2rem;
 }

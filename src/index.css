@@ -4,22 +4,28 @@
 
 @layer base {
   :root {
-    /* existing color variables */
+    --cream: 255, 248, 230;
+    --soft-brown: 139, 94, 60;
+    --leaf-green: 34, 139, 34;
+    --muted-blue: 200, 220, 240;
+    --dust-rose: 244, 204, 204;
   }
 
   .dark {
-    /* existing dark mode variables */
+    /* dark mode overrides */
+    --background: 20, 20, 20;
+    --foreground: 240, 240, 240;
   }
 
-  /* Apply typewriter font globally */
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply bg-[#fefcf5] text-[#8b5e3c] antialiased;
     font-family: 'Fira Code', 'Courier New', monospace;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-heading;
     font-family: 'Fira Code', 'Courier New', monospace;
+    font-weight: bold;
+    color: #8b5e3c;
   }
 
   * {
@@ -45,22 +51,106 @@
   }
 
   .scrapbook-card {
-    @apply bg-card border rounded-xl p-6 shadow-soft;
+    @apply bg-[#fff8e6] border rounded-xl p-6 shadow-soft;
     border-color: hsl(27 29% 32% / 0.08);
     font-family: 'Fira Code', 'Courier New', monospace;
+    color: #8b5e3c;
   }
 
   .tape-accent {
-    @apply absolute -top-2 -right-2 px-3 py-1 bg-dust-rose text-soft-brown text-xs text-hand rotate-3 rounded-full shadow-sm;
+    @apply absolute -top-2 -right-2 px-3 py-1 bg-[#f4cccc] text-[#8b5e3c] text-xs text-hand rotate-3 rounded-full shadow-sm;
   }
 
   .stripe-bg {
     background: repeating-linear-gradient(
       45deg,
-      hsl(var(--cream)),
-      hsl(var(--cream)) 10px,
-      hsl(var(--muted-blue) / 0.1) 10px,
-      hsl(var(--muted-blue) / 0.1) 20px
+      rgb(var(--cream)),
+      rgb(var(--cream)) 10px,
+      rgba(var(--muted-blue), 0.1) 10px,
+      rgba(var(--muted-blue), 0.1) 20px
     );
+  }
+
+  /* Side Panel (PlantModal) */
+  .plant-side-panel {
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 26rem;
+    background-color: #fff8e6;
+    box-shadow: -4px 0 16px rgba(0,0,0,0.25);
+    z-index: 100;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    border-left: 2px solid #d6c7a1;
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .plant-side-panel.open {
+    transform: translateX(0);
+  }
+
+  .side-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #d6c7a1;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .side-panel-header h2 {
+    font-size: 1.5rem;
+    color: #8b5e3c;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .close-btn {
+    width: 2rem;
+    height: 2rem;
+    background-color: #f4cccc;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s;
+  }
+
+  .close-btn:hover {
+    transform: scale(1.1);
+  }
+
+  .side-panel-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  /* Spotify Embed / Button */
+  .spotify-embed {
+    border-radius: 8px;
+    width: 100%;
+  }
+
+  .spotify-button {
+    border: 2px solid #d6c7a1;
+    background-color: #fff8e6;
+    color: #8b5e3c;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    transition: transform 0.2s, background-color 0.2s;
+    text-align: center;
+  }
+
+  .spotify-button:hover {
+    background-color: #fff3d1;
+    transform: scale(1.05);
   }
 }
