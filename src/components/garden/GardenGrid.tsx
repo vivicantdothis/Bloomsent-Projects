@@ -7,7 +7,7 @@ interface GardenGridProps {
   plants: Plant[];
   onPlantClick: (plant: Plant) => void;
   selectedPlant: Plant | null;
-  similarPlants: (Plant & { compatibilityScore?: number })[];
+  similarPlants: (Plant & { compatibilityScore: number })[];
 }
 
 export function GardenGrid({
@@ -31,12 +31,13 @@ export function GardenGrid({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // Adjust canvas size to match container
+    // Adjust canvas size
     canvas.width = canvas.offsetWidth;
     canvas.height = canvas.offsetHeight;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    // Draw lines only if a plant is selected
     if (selectedPlant && similarPlants.length > 0) {
       ctx.strokeStyle = "rgba(34,139,34,0.3)";
       ctx.lineWidth = 2;
@@ -86,17 +87,19 @@ export function GardenGrid({
         className="absolute top-0 left-0 w-full h-full pointer-events-none z-0"
       />
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 relative z-10">
-        {plants.map((plant) => (
-          <PlantCard
-            key={plant.id}
-            id={`plant-${plant.id}`}
-            plant={plant as Plant & { compatibilityScore?: number }}
-            onClick={() => onPlantClick(plant)}
-            compatibilityScore={
-              selectedPlant && similarPlants.find((p) => p.id === plant.id)?.compatibilityScore
-            }
-          />
-        ))}
+        {plants.map((plant) => {
+          // Determine if this plant is in the similarPlants array
+          const similarPlant = similarPlants.find((p) => p.id === plant.id);
+          return (
+            <PlantCard
+              key={plant.id}
+              id={`plant-${plant.id}`}
+              plant={plant}
+              onClick={() => onPlantClick(plant)}
+              compatibilityScore={similarPlant?.compatibilityScore} // only show for similar plants
+            />
+          );
+        })}
       </div>
     </div>
   );

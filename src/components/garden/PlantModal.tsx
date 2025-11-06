@@ -1,20 +1,14 @@
-import { useState } from "react";
+// src/components/garden/PlantModal.tsx
+import { useState, useEffect } from "react";
 import { Plant } from "@/lib/types";
-import { X, ExternalLink } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+import { X } from "lucide-react";
 
 interface PlantModalProps {
   plant: Plant | null;
   isOpen: boolean;
   onClose: () => void;
   similarPlants?: (Plant & { compatibilityScore?: number })[];
-  onViewSimilar?: () => void; // New prop for "View Similar" action
+  onViewSimilar?: () => void;
 }
 
 const plantEmojis: Record<string, string> = {
@@ -30,17 +24,18 @@ export function PlantModal({
   plant,
   isOpen,
   onClose,
-  similarPlants,
+  similarPlants = [],
   onViewSimilar,
 }: PlantModalProps) {
   const [showSimilar, setShowSimilar] = useState(false);
 
+  useEffect(() => {
+    if (!isOpen) setShowSimilar(false);
+  }, [isOpen]);
+
   if (!plant) return null;
 
   const emoji = plantEmojis[plant.personalityType] || "🌱";
-  const spotifyEmbedUrl = plant.songUrl.includes("open.spotify.com")
-    ? plant.songUrl.replace("/track/", "/embed/track/")
-    : null;
 
   const handleViewSimilarClick = () => {
     setShowSimilar(true);
@@ -48,91 +43,64 @@ export function PlantModal({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-lg scrapbook-card">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-heading flex items-center gap-3">
-            <span className="text-4xl">{emoji}</span>
-            {plant.personalityType}
-          </DialogTitle>
-        </DialogHeader>
-
-        <div className="space-y-4 mt-4">
-          {plant.message && (
-            <div className="bg-cream p-4 rounded-lg border border-soft-brown/10">
-              <p className="text-sm italic text-soft-brown">"{plant.message}"</p>
-              <div className="flex justify-between mt-2 text-xs text-muted-foreground">
-                {plant.messageFrom && <span>— {plant.messageFrom}</span>}
-                {plant.messageTo && <span>To: {plant.messageTo}</span>}
-              </div>
-            </div>
-          )}
-
-          {spotifyEmbedUrl ? (
-            <iframe
-              src={spotifyEmbedUrl}
-              width="100%"
-              height="152"
-              frameBorder="0"
-              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-              loading="lazy"
-              className="rounded-lg"
-            />
-          ) : plant.songUrl ? (
-            <Button asChild variant="outline" className="w-full">
-              <a href={plant.songUrl} target="_blank" rel="noopener noreferrer">
-                Listen on Spotify <ExternalLink className="ml-2 w-4 h-4" />
-              </a>
-            </Button>
-          ) : null}
-
-          {/* View Similar Button */}
-          {!showSimilar && similarPlants && similarPlants.length > 0 && (
-            <Button
-              variant="outline"
-              className="w-full mt-2"
-              onClick={handleViewSimilarClick}
-            >
-              View Similar Plants
-            </Button>
-          )}
-
-          {/* Similar Plants Section */}
-          {showSimilar && similarPlants && similarPlants.length > 0 && (
-            <div className="pt-4 border-t border-soft-brown/10 space-y-2">
-              <p className="text-sm text-muted-foreground mb-2">
-                Similar plants and compatibility scores:
-              </p>
-              <div className="flex flex-wrap gap-3">
-                {similarPlants.map((similar) => (
-                  <div
-                    key={similar.id}
-                    className="bg-cream p-2 rounded-lg border border-soft-brown/10 flex flex-col items-center"
-                  >
-                    <span className="text-2xl">
-                      {plantEmojis[similar.personalityType] || "🌱"}
-                    </span>
-                    <span className="text-xs text-muted-foreground">
-                      {similar.compatibilityScore
-                        ? `Score: ${(
-                            similar.compatibilityScore * 100
-                          ).toFixed(0)}%`
-                        : ""}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-
+    <div
+      className={`fixed top-0 right-0 h-full w-80 bg-white shadow-xl transform transition-transform z-50
+        ${isOpen ? "translate-x-0" : "translate-x-full"}`}
+      style={{ overflowY: "auto" }}
+    >
+      <div className="flex justify-between items-center p-4 border-b sticky top-0 bg-white z-10">
+        <h2 className="font-bold text-lg flex items-center gap-2">
+          <span className="text-3xl">{emoji}</span> {plant.personalityType}
+        </h2>
         <button
           onClick={onClose}
-          className="absolute -top-2 -right-2 w-8 h-8 bg-dust-rose rounded-full flex items-center justify-center shadow-md hover:scale-110 transition-transform"
+          className="p-1 rounded hover:bg-gray-200 transition"
         >
-          <X className="w-4 h-4 text-soft-brown" />
+          <X className="w-5 h-5" />
         </button>
-      </DialogContent>
-    </Dialog>
+      </div>
+
+      <div className="p-4 space-y-4">
+        {plant.message && (
+          <div className="bg-cream p-4 rounded-lg border border-soft-brown/10">
+            <p className="text-sm italic text-soft-brown">"{plant.message}"</p>
+          </div>
+        )}
+
+        {/* View Similar Button */}
+        {!showSimilar && similarPlants.length > 0 && (
+          <button
+            onClick={handleViewSimilarClick}
+            className="w-full py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
+          >
+            View Similar Plants
+          </button>
+        )}
+
+        {/* Similar Plants Section */}
+        {showSimilar && similarPlants.length > 0 && (
+          <div className="mt-4 space-y-2">
+            <h3 className="font-semibold mb-2">Similar Plants:</h3>
+            <div className="flex flex-wrap gap-3">
+              {similarPlants.map((sp) => (
+                <div
+                  key={sp.id}
+                  className="bg-cream p-2 rounded-lg border border-soft-brown/10 flex flex-col items-center"
+                >
+                  <span className="text-2xl">
+                    {plantEmojis[sp.personalityType] || "🌱"}
+                  </span>
+                  <span className="text-xs text-green-700 font-medium">
+                    {sp.compatibilityScore
+                      ? `${(sp.compatibilityScore * 100).toFixed(0)}%`
+                      : ""}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }

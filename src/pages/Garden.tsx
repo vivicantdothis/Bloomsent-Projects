@@ -12,8 +12,7 @@ import { Loader2 } from "lucide-react";
 const Garden = () => {
   const [plants, setPlants] = useState<Plant[]>([]);
   const [selectedPlant, setSelectedPlant] = useState<Plant | null>(null);
-  const [similarPlants, setSimilarPlants] = useState<Plant[]>([]);
-  const [showSimilar, setShowSimilar] = useState(false);
+  const [similarPlants, setSimilarPlants] = useState<(Plant & { compatibilityScore: number })[]>([]);
   const [loading, setLoading] = useState(true);
   const gardenRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
@@ -40,15 +39,10 @@ const Garden = () => {
 
   const handlePlantClick = (plant: Plant) => {
     setSelectedPlant(plant);
-    setShowSimilar(false);
-    setSimilarPlants([]);
-  };
 
-  const handleViewSimilar = () => {
-    if (!selectedPlant) return;
-    const similar = getSimilarPlants(selectedPlant, plants);
-    setSimilarPlants(similar);
-    setShowSimilar(true);
+    // Compute similar plants when a plant is clicked
+    const sims = getSimilarPlants(plant, plants);
+    setSimilarPlants(sims);
   };
 
   // Zoom handling on the container
@@ -79,8 +73,7 @@ const Garden = () => {
               The Living Garden
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Click on any plant to view its songs/messages and discover similar
-              plants
+              Click on any plant to view its songs/messages and discover similar plants
             </p>
           </div>
 
@@ -94,19 +87,19 @@ const Garden = () => {
                 plants={plants}
                 onPlantClick={handlePlantClick}
                 selectedPlant={selectedPlant}
-                similarPlants={showSimilar ? similarPlants : []}
+                similarPlants={selectedPlant ? similarPlants : []}
               />
             </div>
           )}
         </div>
       </main>
 
+      {/* Side-panel modal now displays selected plant and similar plants */}
       <PlantModal
         plant={selectedPlant}
         isOpen={!!selectedPlant}
         onClose={() => setSelectedPlant(null)}
-        similarPlants={showSimilar ? similarPlants : []}
-        onViewSimilar={handleViewSimilar}
+        similarPlants={similarPlants}
       />
 
       <Footer />
