@@ -11,7 +11,7 @@ import { Loader2 } from "lucide-react";
 const Garden = () => {
   const [plants, setPlants] = useState<Plant[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [similarPlants, setSimilarPlants] = useState<(Plant & { compatibilityScore: number })[]>([]);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -22,15 +22,8 @@ const Garden = () => {
   const loadPlants = async () => {
     try {
       const data = await getAllPlants();
-
-      if (!Array.isArray(data)) {
-        throw new Error("Invalid data received from API");
-      }
-
       setPlants(data);
-    } catch (err: any) {
-      console.error("Error loading plants:", err);
-      setError("Failed to load plants. Please try again later.");
+    } catch (error) {
       toast({
         title: "Error loading garden",
         description: "Could not load plants. Make sure the backend server is running.",
@@ -42,17 +35,12 @@ const Garden = () => {
   };
 
   const handlePlantClick = (plant: Plant) => {
-    if (!plant?.id) {
-      console.warn("Plant has no ID:", plant);
-      return;
-    }
     navigate(`/plant/${plant.id}`);
   };
 
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-
       <main className="flex-1 py-12 px-4">
         <div className="container mx-auto max-w-7xl">
           <div className="text-center mb-12">
@@ -68,18 +56,14 @@ const Garden = () => {
             <div className="flex justify-center items-center py-20">
               <Loader2 className="w-8 h-8 animate-spin text-leaf" />
             </div>
-          ) : error ? (
-            <div className="text-center py-20 text-red-600">{error}</div>
-          ) : plants.length === 0 ? (
-            <div className="text-center py-20 text-muted-foreground">
-              No plants found in the garden. Be the first to add one!
-            </div>
           ) : (
-            <GardenGrid plants={plants} onPlantClick={handlePlantClick} />
+            <GardenGrid
+              plants={plants}
+              onPlantClick={handlePlantClick}
+            />
           )}
         </div>
       </main>
-
       <Footer />
     </div>
   );

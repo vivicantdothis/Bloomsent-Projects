@@ -7,8 +7,8 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
 import Garden from "./pages/Garden";
 import Submit from "./pages/Submit";
+import PlantDetail from "./pages/plants/plantdetails";
 import NotFound from "./pages/NotFound";
-import PlantDetail from "./pages/plants/plantdetails"; // import the PlantDetail page
 
 const queryClient = new QueryClient();
 
@@ -21,10 +21,9 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/garden" element={<Garden />} />
-          <Route path="/plants/plantdetails/:id" element={<PlantDetail />} /> 
+          <Route path="/plant/:id" element={<PlantDetail />} />
           <Route path="/submit" element={<Submit />} />
-          {/* Catch-all route */}
-          <Route path="*" element={<NotFound />} />
+          <Route path="*" element={<Navigate to="/garden" />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>

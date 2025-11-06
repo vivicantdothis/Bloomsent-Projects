@@ -1,6 +1,6 @@
 import { Plant } from "@/lib/types";
-import { useNavigate } from "react-router-dom";
 
+// Map of personality types to emojis
 const plantEmojis: Record<string, string> = {
   Sunflower: "🌻",
   Willow: "🌿",
@@ -12,21 +12,18 @@ const plantEmojis: Record<string, string> = {
 
 interface PlantCardProps {
   plant: Plant;
+  onClick: () => void;
 }
 
-export function PlantCard({ plant }: PlantCardProps) {
-  const navigate = useNavigate();
+export function PlantCard({ plant, onClick }: PlantCardProps) {
+  // Always get emoji based on personality type
   const emoji = plantEmojis[plant.personalityType] || "🌱";
-
-  const handleClick = () => {
-    // Navigate to PlantDetail page with plant ID
-    navigate(`/plants/plantdetails/${plant.id}`, { state: { plant } });
-  };
 
   return (
     <div
+      id={`plant-${plant.id}`}
       className="scrapbook-card cursor-pointer flex flex-col items-center justify-center text-center p-4 hover-lift transition-transform"
-      onClick={handleClick}
+      onClick={onClick}
     >
       <div className="text-5xl mb-2">{emoji}</div>
       <div className="font-bold text-lg mb-1">{plant.personalityType}</div>
