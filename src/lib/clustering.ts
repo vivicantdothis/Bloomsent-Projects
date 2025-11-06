@@ -39,7 +39,7 @@ export function clusterPlants(plants: Plant[]): Plant[][] {
   return clusters;
 }
 
-// Updated: returns plants with compatibilityScore
+// Returns plants with compatibilityScore
 export function getSimilarPlants(
   plant: Plant,
   allPlants: Plant[],
@@ -55,4 +55,8 @@ export function getSimilarPlants(
     }))
     .sort((a, b) => b.compatibilityScore - a.compatibilityScore)
     .slice(0, limit);
+}
+
+export function calculateSimilarity(plantA: Plant, plantB: Plant): number {
+  return cosineSimilarity(plantA.personalityVector, plantB.personalityVector);
 }
